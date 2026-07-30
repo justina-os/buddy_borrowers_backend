@@ -90,6 +90,16 @@ def accept_request(resource_id:int,request_id:int,user_id=Depends(give_access),c
     cur=con.cursor()
 
     try:
+        cur.execute('''update requests
+                    set status=%s
+                     where request_id=%s and resource_id=%s
+                    ''',("accepted",request_id,resource_id))
+        
+        if cur.rowcount == 0:
+            raise HTTPException(
+                    status_code=404,
+                    detail="Resource not found."
+                                )
         cur.execute('''update resources
                     set status=%s
                     where owner_id=%s and resource_id=%s
@@ -102,16 +112,7 @@ def accept_request(resource_id:int,request_id:int,user_id=Depends(give_access),c
                     detail="Resource not found."
                 )
 
-        cur.execute('''update requests
-                            set status=%s
-                            where request_id=%s and resource_id=%s
-                  ''',("accepted",request_id,resource_id))
-
-        if cur.rowcount == 0:
-                    raise HTTPException(
-                            status_code=404,
-                            detail="Resource not found."
-                        )
+        
         
 
         con.commit()
@@ -155,3 +156,39 @@ def edit_resource(resource_id:int,detail:UpdateResource,user_id=Depends(give_acc
 
     finally:
         cur.close()
+
+
+@resource.patch("/resource/{resource_id}/{request_id}/return")
+def returned_resource(resource_id:int,request_id:int,user_id=Depends(give_access),con=Depends(get_connection)):
+        cur=con.cursor()
+   
+    
+        try:
+
+            cur.execute('''update resources
+                                    set status=%s
+                                    where owner_id=%s and resource_id=%s
+                          ''',("available",user_id,resource_id))
+                
+                
+            if cur.rowcount == 0:
+                raise HTTPException(
+                         status_code=404,
+                        detail="Resource not found."
+                                )
+                
+            cur.execute('''update requests
+                        set status=%s
+                         where request_id=%s and resource_id=%s
+                        ''',("returned",request_id,resource_id))
+            
+            if cur.rowcount == 0:
+                raise HTTPException(
+                        status_code=404,
+                        detail="request not found."
+                                    )
+            
+    
+            con.commit()
+        finally:
+            cur.close()
