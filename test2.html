@@ -1,0 +1,42 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+</head>
+<body>
+
+<input id="msg" type="text" placeholder="Type message">
+<button onclick="sendMessage()">Send</button>
+
+<h3>Messages</h3>
+<ul id="messages"></ul>
+
+<script>
+    token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZXhwIjoxNzg1NDQ4NzQyfQ.H7QBkDhkVlsntx9Qnw9IMz4Pz2R3XtpGCMpeA8Hv5-E"
+    const socket = new WebSocket(`ws://127.0.0.1:8000/chat/1?token=${token}`);
+
+    socket.onopen = () => {
+        console.log("Connected!");
+    };
+
+    socket.onmessage = (event) => {
+        const li = document.createElement("li");
+        li.textContent = event.data;
+        document.getElementById("messages").appendChild(li);
+    };
+
+    socket.onclose = () => {
+        console.log("Disconnected");
+    };
+
+    function sendMessage() {
+        const input = document.getElementById("msg");
+        socket.send(input.value);
+        input.value = "";
+    }
+</script>
+
+</body>
+</html> 

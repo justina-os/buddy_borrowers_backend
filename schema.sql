@@ -43,8 +43,8 @@
 -- )
 
 
--- select * from requests;
-select * from resources;
+select * from requests;
+-- select * from resources;
 
 
 -- ALTER TABLE requests
@@ -56,3 +56,20 @@ select * from resources;
 
 -- ALTER TABLE requests
 -- DROP COLUMN lender_id;
+
+-- delete from users where user_id=1;
+-- SELECT * from users;
+-- delete from resources where owner_id=1;
+
+
+-- SELECT * from resources;
+
+
+-- create table messages(
+--     msg_id BIGSERIAL PRIMARY KEY,
+--     message TEXT not null,
+--     sender_id int not null ,
+--     foreign KEY (sender_id) REFERENCES  users(user_id),
+--     request_id INT NOT NULL REFERENCES requests(request_id),
+--     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );

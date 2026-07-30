@@ -22,7 +22,7 @@ class UpdateResource(BaseModel):
     category:Literal["Object","Skill"]|None=None
 
 # this is for lender
-@resource.post("/resource")
+@resource.post("/resources")
 def add_resouce(info:Resource_info,user_id=Depends(give_access),con=Depends(get_connection)):
     cur=con.cursor()
 
@@ -85,8 +85,8 @@ def remove_resource(resource_id:int,user_id=Depends(give_access),con=Depends(get
 #need to update the the status or accepting the request 
 # resouce_id from front_end not from user 
 
-@resource.patch("/resource/{resource_id}")
-def accept_request(resource_id:int,user_id=Depends(give_access),con=Depends(get_connection)):
+@resource.patch("/resource/{resource_id}/{request_id}")
+def accept_request(resource_id:int,request_id:int,user_id=Depends(give_access),con=Depends(get_connection)):
     cur=con.cursor()
 
     try:
@@ -101,6 +101,18 @@ def accept_request(resource_id:int,user_id=Depends(give_access),con=Depends(get_
                     status_code=404,
                     detail="Resource not found."
                 )
+
+        cur.execute('''update requests
+                            set status=%s
+                            where request_id=%s and resource_id=%s
+                  ''',("accepted",request_id,resource_id))
+
+        if cur.rowcount == 0:
+                    raise HTTPException(
+                            status_code=404,
+                            detail="Resource not found."
+                        )
+        
 
         con.commit()
     finally:

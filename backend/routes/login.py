@@ -1,6 +1,6 @@
 from fastapi import APIRouter,Depends,HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from pydantic import BaseModel
+from pydantic import BaseModel,EmailStr
 from backend.db import get_connection
 from backend.auth import hash_password,verify_password
 from datetime import datetime,timedelta
@@ -10,12 +10,12 @@ register=APIRouter()
 # login and sigin schema 
 
 class Login(BaseModel):
-    email:str
+    email:EmailStr
     password:str
 
 class Signup(BaseModel):
     user_name:str
-    email:str
+    email:EmailStr
     password:str
 
 secret_key="mo4cr4873g4hyiomdddddsmoccy"
@@ -37,6 +37,13 @@ def create_token(data:dict):
 @register.post("/login")
 def login(details:Login,con=Depends(get_connection)):
     cur=con.cursor()
+
+
+    if not details.email.endswith("@kalvium.community"):
+        raise HTTPException(
+            status_code=400,
+            detail="Only Kalvium email addresses are allowed."
+            )
 
     
 
@@ -63,6 +70,12 @@ def login(details:Login,con=Depends(get_connection)):
 def signup(details:Signup,con=Depends(get_connection)):
     cur=con.cursor()
 
+    if not details.email.endswith("@kalvium.community"):
+            raise HTTPException(
+                status_code=400,
+                detail="Only Kalvium email addresses are allowed."
+                )
+
     
     
     
@@ -84,16 +97,23 @@ def signup(details:Signup,con=Depends(get_connection)):
         cur.close()
 
     
-    
-    
 
-def give_access(token:str =Depends(oauth)):
-    
-    
-    try :
-        payload=jwt.decode(token,secret_key,algorithms=[algorithm])
-        user_id=payload["sub"]
+# def give_access(token:str =Depends(oauth)):
+#     try :
+#         payload=jwt.decode(token,secret_key,algorithms=[algorithm])
+#         user_id=payload["sub"]
 
-        return int(user_id)
+#         return int(user_id)
+#     except JWTError:
+#        raise HTTPException(status_code=401,detail="Invalid or expired token")
+
+def verify_token(token: str):
+    try:
+        payload = jwt.decode(token, secret_key, algorithms=[algorithm])
+        return int(payload["sub"])
     except JWTError:
-       raise HTTPException(status_code=401,detail="Invalid or expired token")
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+
+def give_access(token: str = Depends(oauth)):
+    return verify_token(token)
