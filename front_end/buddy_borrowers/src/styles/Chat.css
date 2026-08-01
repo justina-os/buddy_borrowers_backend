@@ -1,0 +1,150 @@
+/* =========================
+   CHAT PAGE
+========================= */
+
+.chat-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f8f5ff;
+    font-family: "Segoe UI", sans-serif;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.chat-header {
+    height: 70px;
+    background: white;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 30px;
+    border-bottom: 1px solid #eee7ff;
+}
+
+.chat-header h2 {
+    color: #6f48d8;
+    margin: 0;
+}
+
+.chat-back {
+    border: none;
+    background: transparent;
+    color: #6f48d8;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+/* =========================
+   MESSAGES AREA
+========================= */
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+/* =========================
+   MESSAGE BUBBLES
+========================= */
+
+.message {
+    max-width: 60%;
+    padding: 11px 16px;
+    border-radius: 18px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+
+/* MY MESSAGE */
+
+.message.mine {
+    align-self: flex-end;
+
+    background: #7047d7;
+    color: white;
+
+    border-bottom-right-radius: 5px;
+}
+
+
+/* OTHER USER */
+
+.message.theirs {
+    align-self: flex-start;
+
+    background: white;
+    color: #292436;
+
+    border: 1px solid #eee8fa;
+
+    border-bottom-left-radius: 5px;
+}
+
+
+/* =========================
+   MESSAGE INPUT
+========================= */
+
+.chat-input-area {
+    background: white;
+    padding: 18px 25px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    border-top: 1px solid #eee7ff;
+}
+
+.chat-input-area input {
+    flex: 1;
+
+    padding: 13px 18px;
+
+    border: 1px solid #ddd5ef;
+    border-radius: 22px;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+.chat-input-area input:focus {
+    border-color: #7047d7;
+}
+
+
+/* =========================
+   SEND BUTTON
+========================= */
+
+.chat-send {
+    border: none;
+
+    background: #7047d7;
+    color: white;
+
+    padding: 12px 22px;
+
+    border-radius: 22px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.chat-send:hover {
+    background: #5f39c5;
+}

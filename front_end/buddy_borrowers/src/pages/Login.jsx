@@ -1,13 +1,17 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 import "../styles/Login.css";
+
 
 const BASE_URL = "http://127.0.0.1:8000";
 
-function Login() {
+
+function Login(){
 
     const navigate = useNavigate();
+
 
     const [isLogin,setIsLogin] = useState(true);
 
@@ -16,12 +20,16 @@ function Login() {
     const [password,setPassword] = useState("");
 
     const [error,setError] = useState("");
+    const [loading,setLoading] = useState(false);
+
 
     const handleSubmit = async(e)=>{
 
         e.preventDefault();
 
         setError("");
+        setLoading(true);
+
 
         try{
 
@@ -35,10 +43,12 @@ function Login() {
                     }
                 );
 
+
                 localStorage.setItem(
                     "token",
                     response.data.access_token
                 );
+
 
                 navigate("/home");
 
@@ -49,15 +59,20 @@ function Login() {
                 await axios.post(
                     `${BASE_URL}/signup`,
                     {
-                        username,
+                        user_name:username,
                         email,
                         password
                     }
                 );
 
+
                 alert("Account created successfully!");
 
+
                 setIsLogin(true);
+
+                setUsername("");
+                setPassword("");
 
             }
 
@@ -67,19 +82,31 @@ function Login() {
 
             if(err.response){
 
-                setError(err.response.data.detail);
+                setError(
+                    err.response.data.detail ||
+                    "Something went wrong."
+                );
 
             }
 
             else{
 
-                setError("Server not reachable.");
+                setError(
+                    "Server not reachable."
+                );
 
             }
 
         }
 
-    }
+        finally{
+
+            setLoading(false);
+
+        }
+
+    };
+
 
     return(
 
@@ -87,93 +114,134 @@ function Login() {
 
             <div className="card">
 
-                <h1>Buddy Borrowers</h1>
+
+                <h1>
+                    Buddy Borrowers
+                </h1>
+
 
                 <p className="subtitle">
                     Borrow. Lend. Connect.
                 </p>
 
+
+
                 <div className="toggle">
 
+
                     <button
-                    className={isLogin ? "active":""}
-                    onClick={()=>setIsLogin(true)}
+                        type="button"
+                        className={isLogin ? "active":""}
+                        onClick={()=>{
+
+                            setIsLogin(true);
+                            setError("");
+
+                        }}
                     >
 
                         Login
 
                     </button>
 
+
                     <button
-                    className={!isLogin ? "active":""}
-                    onClick={()=>setIsLogin(false)}
+                        type="button"
+                        className={!isLogin ? "active":""}
+                        onClick={()=>{
+
+                            setIsLogin(false);
+                            setError("");
+
+                        }}
                     >
 
                         Sign Up
 
                     </button>
 
+
                 </div>
 
+
+
                 <form onSubmit={handleSubmit}>
+
 
                     {!isLogin && (
 
                         <input
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e)=>setUsername(e.target.value)}
+                            type="text"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e)=>setUsername(e.target.value)}
+                            required
                         />
 
                     )}
 
-                    <input
 
-                    type="email"
-
-                    placeholder="Email"
-
-                    value={email}
-
-                    onChange={(e)=>setEmail(e.target.value)}
-
-                    />
 
                     <input
-
-                    type="password"
-
-                    placeholder="Password"
-
-                    value={password}
-
-                    onChange={(e)=>setPassword(e.target.value)}
-
+                        type="email"
+                        placeholder="Kalvium Email"
+                        value={email}
+                        onChange={(e)=>setEmail(e.target.value)}
+                        required
                     />
 
-                    <button className="submit">
 
-                        {isLogin ? "Login":"Create Account"}
+
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e)=>setPassword(e.target.value)}
+                        required
+                    />
+
+
+
+                    <button
+                        className="submit"
+                        disabled={loading}
+                    >
+
+                        {loading
+                            ? "Please wait..."
+                            : isLogin
+                                ? "Login"
+                                : "Create Account"
+                        }
 
                     </button>
 
+
                 </form>
 
-                {error &&
 
-                <p className="error">
 
-                    {error}
+                {error && (
+
+                    <p className="error">
+                        {error}
+                    </p>
+
+                )}
+
+
+                <p className="community-note">
+
+                    Only @kalvium.community accounts are supported.
 
                 </p>
 
-                }
 
             </div>
 
         </div>
 
-    )
+    );
 
 }
 

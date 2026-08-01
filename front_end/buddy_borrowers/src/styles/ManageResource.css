@@ -1,0 +1,103 @@
+.manage-page {
+    min-height: 100vh;
+    background: #f8f6ff;
+    padding: 50px;
+}
+
+.back-button {
+    border: none;
+    background: transparent;
+    color: #6d45cf;
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 25px;
+}
+
+.manage-card {
+    max-width: 650px;
+    margin: auto;
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 10px 30px rgba(75, 50, 130, 0.1);
+}
+
+.resource-icon {
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0ebff;
+    border-radius: 15px;
+    font-size: 55px;
+    margin-bottom: 20px;
+}
+
+.manage-category {
+    display: inline-block;
+    background: #eee7ff;
+    color: #6840cc;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.manage-card h1 {
+    margin: 15px 0 5px;
+}
+
+.manage-description {
+    color: #777;
+}
+
+.resource-info {
+    display: flex;
+    gap: 50px;
+    margin: 30px 0;
+}
+
+.resource-info div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.resource-info span {
+    color: #888;
+    font-size: 13px;
+}
+
+.resource-info strong {
+    font-size: 18px;
+}
+
+.manage-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.manage-actions button {
+    padding: 12px 18px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.edit-button {
+    background: #7048d7;
+    color: white;
+    border: none;
+}
+
+.request-button {
+    background: white;
+    color: #7048d7;
+    border: 1px solid #7048d7;
+}
+
+.delete-button {
+    background: white;
+    color: #d64b5f;
+    border: 1px solid #e5a5ae;
+}

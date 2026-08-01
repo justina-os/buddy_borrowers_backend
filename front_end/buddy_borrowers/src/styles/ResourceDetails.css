@@ -1,0 +1,176 @@
+.resource-details-page {
+    min-height: 100vh;
+    background: #f8f5ff;
+    padding: 60px;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.details-back {
+    border: none;
+    background: transparent;
+    color: #6f42d9;
+    font-size: 17px;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+.details-back:hover {
+    text-decoration: underline;
+}
+
+
+/* Main card */
+
+.resource-details-card {
+    max-width: 760px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 24px;
+    padding: 42px;
+    box-shadow: 0 12px 35px rgba(91, 61, 170, 0.1);
+}
+
+
+/* Image / placeholder */
+
+.details-image {
+    height: 180px;
+    background: #eee8ff;
+    border-radius: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 25px;
+}
+
+.details-image span {
+    font-size: 60px;
+}
+
+
+/* Category */
+
+.details-category {
+    display: inline-block;
+    background: #eee7ff;
+    color: #7046d3;
+
+    padding: 7px 16px;
+    border-radius: 20px;
+
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+
+/* Resource name */
+
+.resource-details-card h1 {
+    color: #7957dc;
+    font-size: 34px;
+    margin: 10px 0;
+}
+
+
+/* Description */
+
+.details-description {
+    color: #666;
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+
+/* Price + status */
+
+.details-info {
+    display: flex;
+    gap: 60px;
+
+    padding: 20px 0;
+    margin-bottom: 30px;
+
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.details-info div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.details-info span {
+    color: #777;
+    font-size: 14px;
+}
+
+.details-info strong {
+    font-size: 19px;
+    color: #222;
+}
+
+
+/* Request */
+
+.request-resource-button {
+    width: 100%;
+
+    border: none;
+    border-radius: 12px;
+
+    padding: 16px;
+
+    background: #7046d3;
+    color: white;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.request-resource-button:hover:not(:disabled) {
+    background: #5d35bd;
+    transform: translateY(-1px);
+}
+
+.request-resource-button:disabled {
+    background: #c9c2da;
+    cursor: not-allowed;
+}
+
+
+/* Missing resource */
+
+.resource-details-page > h2 {
+    text-align: center;
+    color: #7046d3;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .resource-details-page {
+        padding: 25px;
+    }
+
+    .resource-details-card {
+        padding: 25px;
+    }
+
+    .details-info {
+        gap: 30px;
+    }
+
+    .resource-details-card h1 {
+        font-size: 28px;
+    }
+}

@@ -56,8 +56,10 @@ def get_my_resources(user_id=Depends(give_access),con=Depends(get_connection)):
 
     cur=con.cursor()
     try:
+        
         cur.execute("select * from resources where owner_id=%s",(user_id,))
         temp=cur.fetchall()
+        print("MY RESOURCES:", temp)
 
         return temp
 

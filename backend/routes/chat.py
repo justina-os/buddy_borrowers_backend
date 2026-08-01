@@ -8,14 +8,44 @@ chat= APIRouter()
 @chat.websocket("/chat/{request_id}")
 async def chatting(request_id:int,websocket:WebSocket,token:str,conn=Depends(get_connection)):
     user_id=verify_token(token)
+    cur=conn.cursor()
+
+    
         
     await websocket.accept()
     manager.connect(request_id, websocket,user_id)
     
 
     try:
+
+        cur.execute(
+        '''
+        SELECT req.requester_id, r.owner_id
+        FROM requests req
+        JOIN resources r
+            ON req.resource_id = r.resource_id
+        WHERE req.request_id = %s
+        ''',
+        (request_id,)
+    )
+
+        request_data=cur.fetchone()
+
+        if not request_data:
+            await websocket.close(code=1008)
+            cur.close()
+            return
+
+        if (
+        user_id != request_data["requester_id"]
+        and user_id != request_data["owner_id"]
+        ):
+
+            await websocket.close(code=1008)
+            cur.close()
+            return
        
-        cur=conn.cursor()
+        
         while True:
             message = await websocket.receive_text()
             print("Received:", message)
@@ -31,8 +61,11 @@ async def chatting(request_id:int,websocket:WebSocket,token:str,conn=Depends(get
             #         await ws.send_text(message)
 
             for id,ws in manager.connections[request_id].items():
-                if id !=user_id:
-                    await ws.send_text(message)
+                # if id !=user_id:
+                await ws.send_json({
+                    "message": message,
+                    "sender_id": user_id
+                })
         
     finally:
         manager.disconnect(request_id,websocket,user_id)

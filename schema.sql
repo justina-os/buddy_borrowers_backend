@@ -43,7 +43,7 @@
 -- )
 
 
-select * from requests;
+-- select * from users;
 -- select * from resources;
 
 
@@ -62,7 +62,7 @@ select * from requests;
 -- delete from resources where owner_id=1;
 
 
--- SELECT * from resources;
+SELECT * from resources;
 
 
 -- create table messages(

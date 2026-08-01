@@ -58,7 +58,7 @@ def show_requests(user_id=Depends(give_access),
         # return resources
 
         cur.execute('''
-            select r.*
+            select r.*,req.request_id
             from resources r 
             join requests req
             on r.resource_id=req.resource_id
@@ -85,5 +85,32 @@ def cancel_request(request_id:int,con=Depends(get_connection)):#getting request_
         if cur.rowcount==0:
             raise HTTPException(status_code=404, detail="Request doesn't exist")
         con.commit()
+    finally:
+        cur.close()
+
+
+@request.get("/requests/my_requests")
+def get_my_request(user_id=Depends(give_access),
+                 con=Depends(get_connection)):
+    cur=con.cursor()
+    try:
+        cur.execute('''
+                select r.resource_name,
+                r.resource_description,
+                req.offers,
+                req.status,
+                req.request_id
+                from resources 
+                r join requests req 
+                on r.resource_id=req.resource_id
+                where requester_id=%s
+
+
+
+            ''',(user_id,))
+        requests=cur.fetchall()
+
+        return requests
+        pass
     finally:
         cur.close()

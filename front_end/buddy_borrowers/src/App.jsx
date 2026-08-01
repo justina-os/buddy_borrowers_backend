@@ -1,17 +1,50 @@
-import { Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
+import { Routes,Route,Navigate } from "react-router-dom";
 
-function Home() {
-    return <h1>Welcome Home</h1>;
-}
+import Login from "./pages/Login.jsx";
+import Home from "./pages/Home.jsx";
+import ManageResource from "./pages/ManageResource";
+import ResourceDetails from "./pages/ResourceDetails";
+import Chat from "./pages/Chat";
+function App(){
 
-function App() {
-    return (
+    return(
+
         <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/home" element={<Home />} />
+
+            <Route
+                path="/"
+                element={<Login />}
+            />
+
+            <Route
+                path="/home"
+                element={<Home />}
+            />
+
+            <Route
+                path="*"
+                element={<Navigate to="/" />}
+            />
+
+            <Route
+                    path="/my-resources/:resource_id"
+                    element={<ManageResource />}
+                />
+
+            <Route
+                path="/resources/:resourceId"
+                element={<ResourceDetails />}
+                />
+
+            <Route
+                path="/chat/:requestId"
+                element={<Chat />}
+                />
+
         </Routes>
+
     );
+
 }
 
 export default App;

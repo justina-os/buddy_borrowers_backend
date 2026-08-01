@@ -117,3 +117,30 @@ def verify_token(token: str):
 
 def give_access(token: str = Depends(oauth)):
     return verify_token(token)
+
+
+
+@register.get("/me")
+def get_current_user(
+    user_id=Depends(give_access),
+    con=Depends(get_connection)
+):
+    cur = con.cursor()
+
+    try:
+        cur.execute(
+            "select user_name from users where user_id=%s",
+            (user_id,)
+        )
+        user = cur.fetchone()
+
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found"
+            )
+
+        return user
+
+    finally:
+        cur.close()
