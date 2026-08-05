@@ -3,6 +3,23 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Home.css";
 
+import buddyHero from "../assets/buddy-hero.png";
+
+import {
+    House,
+    Package,
+    Brain,
+    Inbox,
+    ClipboardList,
+    Heart,
+    User,
+    Settings,
+    Search,
+    Bell,
+    MessageCircle,
+    Plus
+} from "lucide-react";
+
 const BASE_URL = "http://127.0.0.1:8000";
 
 function Home() {
@@ -487,101 +504,63 @@ const handleRejectRequest = async (resourceId, requestId) => {
 
                 <nav>
 
+    <button className="nav-link selected">
+        <House size={18} />
+        <span>Home</span>
+    </button>
 
-                    <button className="nav-link selected">
+    {/* TODO: Later give endpoint */}
+    {/* <button className="nav-link">
+        <Package size={18} />
+        <span>Browse Items</span>
+    </button> */}
 
-                        🏠 Home
+    {/* TODO: Later give endpoint */}
+    {/* <button className="nav-link">
+        <Brain size={18} />
+        <span>Browse Skills</span>
+    </button> */}
 
-                    </button>
+    <button
+        className="nav-link"
+        onClick={handleMyRequests}
+    >
+        <Inbox size={18} />
+        <span>My Requests</span>
+    </button>
 
+    <button
+        className="nav-link"
+        onClick={handleMyResources}
+    >
+        <ClipboardList size={18} />
+        <span>My Resources</span>
+    </button>
 
-                    {/* TODO:
-                        Later give endpoint
-                    */}
+    <button
+        className="nav-link"
+        onClick={handleIncomingRequests}
+    >
+        <MessageCircle size={18} />
+        <span>View Requests</span>
+    </button>
 
-                    <button className="nav-link">
+    <button className="nav-link">
+        <Heart size={18} />
+        <span>Favourites</span>
+    </button>
 
-                        📦 Browse Items
+    <button className="nav-link">
+        <User size={18} />
+        <span>Profile</span>
+    </button>
 
-                    </button>
+    {/* <button className="nav-link">
+        <Settings size={18} />
+        <span>Settings</span>
+    </button> */}
 
-
-                    {/* TODO:
-                        Later give endpoint
-                    */}
-
-                    <button className="nav-link">
-
-                        🧠 Browse Skills
-
-                    </button>
-
-
-                    {/* TODO:
-                        Waiting for endpoint
-                    */}
-
-                    <button
-                    className="nav-link"
-                    onClick={handleMyRequests}
-                    >
-                        📩 My Requests
-                    </button>
-
-
-
-                    {/* CONNECTED */}
-
-                    <button
-                        className="nav-link"
-                        onClick={handleMyResources}
-                    >
-
-                        📋 My Resources
-
-                    </button>
-
-
-                    {/* TODO:
-                        Waiting for chat navigation
-                    */}
-
-                    <button
-                        className="nav-link"
-                        onClick={handleIncomingRequests}
-                    >
-                            📥 View Requests
-                    </button>
-
-
-                    {/* TODO V3 */}
-
-                    <button className="nav-link">
-
-                        ♡ Favourites
-
-                    </button>
-
-
-                    {/* TODO */}
-
-                    <button className="nav-link">
-
-                        👤 Profile
-
-                    </button>
-
-
-                    {/* TODO */}
-
-                    <button className="nav-link">
-
-                        ⚙ Settings
-
-                    </button>
-
-
-                </nav>
+</nav>
 
 
 
@@ -636,59 +615,37 @@ const handleRejectRequest = async (resourceId, requestId) => {
 
                 <header className="topbar">
 
+    {/* SEARCH */}
+    <form
+        className="search-box"
+        onSubmit={handleSearch}
+    >
+        <Search
+            size={19}
+            className="search-icon"
+        />
 
-                    {/* SEARCH
-                        GET /resources
-                    */}
-
-                    <form
-                        className="search-box"
-                        onSubmit={handleSearch}
-                    >
-
-
-                        <span>
-
-                            🔍
-
-                        </span>
-
-
-                        <input
-                            type="text"
-                            placeholder="Search items or skills..."
-                            value={search}
-                            onChange={(e)=>setSearch(e.target.value)}
-                        />
+        <input
+            type="text"
+            placeholder="Search items or skills..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+        />
+    </form>
 
 
-                    </form>
+    <div className="top-actions">
 
+        {/* Notifications */}
+        <button className="icon-button">
+            <Bell size={19} />
+        </button>
 
+        {/* Messages */}
+        <button className="icon-button">
+            <MessageCircle size={19} />
+        </button>
 
-                    <div className="top-actions">
-
-
-                        {/* TODO V3:
-                            Notifications
-                        */}
-
-                        <button className="icon-button">
-
-                            🔔
-
-                        </button>
-
-
-                        {/* TODO:
-                            Messages
-                        */}
-
-                        <button className="icon-button">
-
-                            💬
-
-                        </button>
 
 
 
@@ -737,114 +694,54 @@ const handleRejectRequest = async (resourceId, requestId) => {
 
                 <section className="hero">
 
+    <div className="hero-content">
 
-                    <div className="hero-content">
+        <h1>
+            Welcome back, {user.user_name}!
+        </h1>
 
+        <p>
+            Borrow. Lend. Share skills. Build connections.
+        </p>
 
-                        <h1>
+        <div className="stats">
 
-                            Good morning, {user.user_name}! 👋
+            <div className="stat-card">
+                <span>Your Resources</span>
 
-                        </h1>
+                <strong>
+                    {myResourceCount}
+                </strong>
 
-
-                        <p>
-
-                            Borrow. Lend. Share skills.
-                            Build connections.
-
-                        </p>
-
-
-
-                        <div className="stats">
-
-
-                            <div className="stat-card">
-
-
-                                <span>
-
-                                    Your Resources
-
-                                </span>
+                <small>
+                    View your listings
+                </small>
+            </div>
 
 
-                                <strong>
+            <div className="stat-card">
+                <span>Requests</span>
 
-                                    {myResourceCount}
+                <strong>--</strong>
 
-                                </strong>
+                <small>
+                    Yet to connect
+                </small>
+            </div>
 
+        </div>
 
-                                <small>
-
-                                    View your listings
-
-                                </small>
-
-
-                            </div>
+    </div>
 
 
+    <div className="hero-art">
+        <img
+            src={buddyHero}
+            alt="Students sharing resources"
+        />
+    </div>
 
-                            {/* TODO:
-                                Waiting for request endpoint
-                                mapping from backend
-                            */}
-
-                            <div className="stat-card">
-
-
-                                <span>
-
-                                    Requests
-
-                                </span>
-
-
-                                <strong>
-
-                                    --
-
-                                </strong>
-
-
-                                <small>
-
-                                    Yet to connect
-
-                                </small>
-
-
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <div className="hero-art">
-
-
-                        <div className="hero-circle">
-
-                            <span>📚</span>
-
-                            <span>🎸</span>
-
-                            <span>⚽</span>
-
-                        </div>
-
-
-                    </div>
-
-
-                </section>
+</section>
 
 
 

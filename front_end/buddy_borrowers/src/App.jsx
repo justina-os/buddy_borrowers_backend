@@ -4,6 +4,7 @@ import Login from "./pages/Login.jsx";
 import Home from "./pages/Home.jsx";
 import ManageResource from "./pages/ManageResource";
 import ResourceDetails from "./pages/ResourceDetails";
+import EditResource from "./pages/EditResource";
 import Chat from "./pages/Chat";
 function App(){
 
@@ -39,6 +40,11 @@ function App(){
             <Route
                 path="/chat/:requestId"
                 element={<Chat />}
+                />
+
+            <Route
+                path="/my-resources/:id/edit"
+                element={<EditResource />}
                 />
 
         </Routes>

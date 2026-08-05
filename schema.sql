@@ -62,7 +62,7 @@
 -- delete from resources where owner_id=1;
 
 
-SELECT * from resources;
+-- SELECT * from users;
 
 
 -- create table messages(
@@ -73,3 +73,16 @@ SELECT * from resources;
 --     request_id INT NOT NULL REFERENCES requests(request_id),
 --     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 -- );
+
+-- CREATE TABLE pending_signup(
+--     id BIGSERIAL PRIMARY KEY,
+--     mail_id VARCHAR(255) NOT NULL,
+--     user_name TEXT NOT NULL,
+--     password TEXT NOT NULL,
+--     code VARCHAR(6) NOT NULL,
+--     expires_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP + INTERVAL '5 minutes')
+-- );
+
+
+alter TABLE pending_signup
+add CONSTRAINT unique_mail UNIQUE(mail_id)

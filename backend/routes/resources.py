@@ -9,7 +9,7 @@ resource=APIRouter()
 class Resource_info(BaseModel):
     resource_name:str
     resource_description:str
-    price:str
+    price:int
     status:Literal["available","rented"]
     category:Literal["Object","Skill"]
 
@@ -17,7 +17,7 @@ class Resource_info(BaseModel):
 class UpdateResource(BaseModel):
     resource_name:str| None=None
     resource_description:str|None=None
-    price:str|None=None
+    price:int|None=None
     status:Literal["available","rented"]|None=None
     category:Literal["Object","Skill"]|None=None
 
@@ -121,7 +121,7 @@ def accept_request(resource_id:int,request_id:int,user_id=Depends(give_access),c
     finally:
         cur.close()
 
-@resource.patch("/resource/edit/{resource_id}")
+@resource.patch("/resource/{resource_id}")
 def edit_resource(resource_id:int,detail:UpdateResource,user_id=Depends(give_access),con=Depends(get_connection)):
     cur=con.cursor()
     update=detail.model_dump(exclude_unset=True)
@@ -145,8 +145,10 @@ def edit_resource(resource_id:int,detail:UpdateResource,user_id=Depends(give_acc
 
     command=f"update resources set {",".join(update_key)} where resource_id=%s and owner_id=%s"
     try:
+        print(update_value)
         cur.execute("select * from resources where resource_id=%s",(resource_id,))
         temp=cur.fetchone()
+        
         if not temp:
             raise HTTPException(status_code=404,detail="Resource id doesn't exist")
 

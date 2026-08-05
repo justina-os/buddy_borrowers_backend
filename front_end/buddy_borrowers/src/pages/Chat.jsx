@@ -12,8 +12,6 @@ function Chat() {
 
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
-
-    // Stores the logged-in user's ID
     const [currentUserId, setCurrentUserId] = useState(null);
 
     const socketRef = useRef(null);
@@ -57,7 +55,6 @@ function Chat() {
                 );
 
             }
-
         };
 
         fetchCurrentUser();
@@ -86,9 +83,7 @@ function Chat() {
 
 
         socket.onopen = () => {
-
             console.log("CHAT CONNECTED");
-
         };
 
 
@@ -99,40 +94,31 @@ function Chat() {
             console.log("MESSAGE RECEIVED:", data);
 
             setMessages((previousMessages) => [
-
                 ...previousMessages,
-
                 {
-                    text: data.message,
+                    message: data.message,
                     sender_id: data.sender_id
                 }
-
             ]);
 
         };
 
 
         socket.onerror = (error) => {
-
             console.error(
                 "WEBSOCKET ERROR:",
                 error
             );
-
         };
 
 
         socket.onclose = () => {
-
             console.log("CHAT DISCONNECTED");
-
         };
 
 
         return () => {
-
             socket.close();
-
         };
 
     }, [requestId, navigate]);
@@ -148,7 +134,6 @@ function Chat() {
             return;
         }
 
-
         if (
             !socketRef.current ||
             socketRef.current.readyState !== WebSocket.OPEN
@@ -159,14 +144,12 @@ function Chat() {
             );
 
             return;
-
         }
 
 
         socketRef.current.send(message);
 
         setMessage("");
-
     };
 
 
@@ -174,82 +157,100 @@ function Chat() {
     // UI
     // =========================
 
-   return (
+    return (
 
-    <div className="chat-page">
+        <div className="chat-page">
 
-        <div className="chat-header">
+            {/* HEADER */}
 
-            <button
-                className="chat-back"
-                onClick={() => navigate("/home")}
-            >
-                ← Back
-            </button>
+            <div className="chat-header">
 
-            <h1>Chat</h1>
+                <button
+                    className="chat-back"
+                    onClick={() => navigate("/home")}
+                >
+                    ← Back
+                </button>
 
-        </div>
+                <h1>Chat</h1>
 
-
-        <div className="chat-messages">
-
-            {messages.map((msg, index) => {
-
-                const isMine =
-                    msg.sender_id === currentUserId;
-
-                return (
-
-                    <div
-                        key={index}
-                        className={
-                            isMine
-                                ? "message mine"
-                                : "message theirs"
-                        }
-                    >
-                        {msg.text}
-                    </div>
-
-                );
-
-            })}
-
-        </div>
+            </div>
 
 
-        <div className="chat-input-area">
+            {/* MESSAGES */}
 
-            <input
-                type="text"
-                value={message}
-                placeholder="Type a message..."
-                onChange={(e) =>
-                    setMessage(e.target.value)
-                }
-                onKeyDown={(e) => {
+            <div className="chat-messages">
 
-                    if (e.key === "Enter") {
-                        sendMessage();
+                {messages.map((msg, index) => {
+
+                    const isMine =
+                        Number(msg.sender_id) ===
+                        Number(currentUserId);
+
+                    return (
+
+                        <div
+                            key={index}
+                            className={
+                                isMine
+                                    ? "message-row mine"
+                                    : "message-row theirs"
+                            }
+                        >
+
+                            <div
+                                className={
+                                    isMine
+                                        ? "message-bubble purple-bubble"
+                                        : "message-bubble white-bubble"
+                                }
+                            >
+
+                                {msg.message}
+
+                            </div>
+
+                        </div>
+
+                    );
+
+                })}
+
+            </div>
+
+
+            {/* INPUT */}
+
+            <div className="chat-input-area">
+
+                <input
+                    type="text"
+                    value={message}
+                    placeholder="Type a message..."
+                    onChange={(e) =>
+                        setMessage(e.target.value)
                     }
+                    onKeyDown={(e) => {
 
-                }}
-            />
+                        if (e.key === "Enter") {
+                            sendMessage();
+                        }
 
-            <button
-                className="chat-send"
-                onClick={sendMessage}
-            >
-                Send
-            </button>
+                    }}
+                />
+
+                <button
+                    className="chat-send"
+                    onClick={sendMessage}
+                >
+                    Send
+                </button>
+
+            </div>
 
         </div>
 
-    </div>
-
-);
-
+    );
 }
 
 export default Chat;

@@ -148,3 +148,38 @@
 .chat-send:hover {
     background: #5f39c5;
 }
+
+
+.message-row {
+    display: flex;
+    width: 100%;
+    margin: 7px 0;
+}
+
+.message-row.mine {
+    justify-content: flex-end;
+}
+
+.message-row.theirs {
+    justify-content: flex-start;
+}
+
+.message-bubble {
+    max-width: 65%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    line-height: 1.4;
+}
+
+.purple-bubble {
+    background: #7557e8;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.white-bubble {
+    background: white;
+    color: #333;
+    border: 1px solid #eee8fa;
+    border-bottom-left-radius: 4px;
+}

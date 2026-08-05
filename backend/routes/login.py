@@ -1,10 +1,13 @@
 from fastapi import APIRouter,Depends,HTTPException
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel,EmailStr
 from backend.db import get_connection
 from backend.auth import hash_password,verify_password
 from datetime import datetime,timedelta
 from jose import jwt,JWTError
+import random 
+from backend.test_email import send_email
+# from fastapi import UploadFile
 register=APIRouter()
 
 # login and sigin schema 
@@ -17,6 +20,8 @@ class Signup(BaseModel):
     user_name:str
     email:EmailStr
     password:str
+
+
 
 secret_key="mo4cr4873g4hyiomdddddsmoccy"
 access_token_expire=30
@@ -66,33 +71,26 @@ def login(details:Login,con=Depends(get_connection)):
 
 
 
-@register.post("/signup")
-def signup(details:Signup,con=Depends(get_connection)):
+@register.post("/verify_signup")
+def signup(mail_id:str,code:str,con=Depends(get_connection)):
     cur=con.cursor()
-
-    if not details.email.endswith("@kalvium.community"):
-            raise HTTPException(
-                status_code=400,
-                detail="Only Kalvium email addresses are allowed."
-                )
-
-    
-    
     
     try:
-        cur.execute("select 1 from users where  email=%s",(details.email,))
-        row=cur.fetchone()
-        password=hash_password(details.password)
-
-        if  row:
-                raise HTTPException(status_code=409,detail="User already exists")
-
-
-        cur.execute("insert into users (user_name,email,password) values(%s,%s,%s)",(details.user_name,details.email,password))
-        con.commit()
-        return {
-                "message": "User created successfully"
-            }
+        cur.execute("select * from pending_signup where mail_id=%s",(mail_id,))
+        temp=cur.fetchone()
+        if not temp:
+            raise HTTPException(status_code=404,detail="Pending signip not found")
+        
+        if temp["expires_at"]<=datetime.now():
+            raise HTTPException(status_code=400,detail="otp expired")
+        if temp["code"]==code:
+            cur.execute("insert into users (user_name,email,password) values(%s,%s,%s)",(temp["user_name"],temp["mail_id"],temp["password"]))
+            cur.execute("delete from pending_signup where mail_id=%s",(mail_id,))
+            con.commit()
+            return {
+                "message": "User created successfully" }
+        else:
+            raise HTTPException(status_code=400,detail="Invalid OTP")
     finally:
         cur.close()
 
@@ -129,7 +127,7 @@ def get_current_user(
 
     try:
         cur.execute(
-            "select user_name from users where user_id=%s",
+            "select user_name,user_id from users where user_id=%s",
             (user_id,)
         )
         user = cur.fetchone()
@@ -144,3 +142,39 @@ def get_current_user(
 
     finally:
         cur.close()
+
+
+
+
+
+#
+@register.post("/signup")
+def verify_email(details:Signup,con=Depends(get_connection)):
+    cur=con.cursor()
+
+    if not details.email.endswith("@kalvium.community"):
+            raise HTTPException(
+                status_code=400,
+                detail="Only Kalvium email addresses are allowed."
+                )
+
+    try:
+        cur.execute("select 1 from users where  email=%s",(details.email,))
+        row=cur.fetchone()
+        if  row:
+                raise HTTPException(status_code=409,detail="User already exists")
+
+        password=hash_password(details.password)
+        
+        num=str(random.randint(100000,999999))
+        
+        cur.execute("insert into pending_signup (mail_id,user_name,password,code) values(%s,%s,%s,%s)",(details.email,details.user_name,password,num))
+        con.commit()
+
+        send_email(details.email,num)
+
+
+    finally:
+        cur.close()
+
+

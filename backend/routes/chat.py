@@ -44,6 +44,21 @@ async def chatting(request_id:int,websocket:WebSocket,token:str,conn=Depends(get
             await websocket.close(code=1008)
             cur.close()
             return
+
+        cur.execute(
+                          """
+                            SELECT message, sender_id
+                            FROM messages
+                            WHERE request_id = %s
+                            ORDER BY sent_at
+                         """,(request_id,))
+        old_messages = cur.fetchall()
+        
+        for msg in old_messages:
+            await websocket.send_json({
+                            "message":msg["message"],
+                            "sender_id":msg["sender_id"]}
+                        )
        
         
         while True:
@@ -53,7 +68,8 @@ async def chatting(request_id:int,websocket:WebSocket,token:str,conn=Depends(get
             
             cur.execute("insert into messages (message,sender_id,request_id)  values(%s,%s,%s)",(message,user_id,request_id))
             conn.commit()
-            print(manager.connections)
+            
+
             
 
             # for ws in manager.connections[request_id]:

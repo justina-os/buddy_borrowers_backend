@@ -1,0 +1,296 @@
+.edit-page {
+    min-height: 100vh;
+    background: #f8f6ff;
+    padding: 55px 7%;
+    font-family: inherit;
+}
+
+.edit-back {
+    border: none;
+    background: transparent;
+    color: #7045e8;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+.edit-back:hover {
+    text-decoration: underline;
+}
+
+
+/* ================================
+   PANEL
+================================ */
+
+.edit-resource-panel {
+    max-width: 850px;
+    margin: 0 auto;
+
+    background: white;
+
+    padding: 35px;
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 15px 40px rgba(112, 69, 232, 0.10);
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.edit-resource-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin-bottom: 30px;
+}
+
+.edit-resource-header h1 {
+    margin: 6px 0;
+
+    font-size: 30px;
+
+    color: #222;
+}
+
+.edit-resource-header p {
+    margin: 0;
+
+    color: #777;
+}
+
+.edit-label {
+    font-size: 12px;
+
+    font-weight: 700;
+
+    color: #7045e8;
+
+    letter-spacing: 1px;
+}
+
+.edit-close {
+    width: 40px;
+    height: 40px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #f5f1ff;
+
+    color: #7045e8;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.edit-close:hover {
+    background: #ebe3ff;
+}
+
+
+/* ================================
+   FORM
+================================ */
+
+.edit-resource-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+.edit-field {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    flex: 1;
+}
+
+.edit-field label {
+    font-size: 14px;
+
+    color: #666;
+
+    font-weight: 500;
+}
+
+.edit-field input,
+.edit-field textarea,
+.edit-field select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 15px 16px;
+
+    border: 1px solid #ded5f3;
+
+    border-radius: 12px;
+
+    background: #fffafd;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: 0.2s;
+}
+
+.edit-field input:focus,
+.edit-field textarea:focus,
+.edit-field select:focus {
+    border-color: #7045e8;
+
+    box-shadow:
+        0 0 0 3px rgba(112, 69, 232, 0.08);
+}
+
+.edit-field textarea {
+    min-height: 140px;
+
+    resize: vertical;
+}
+
+
+/* Price + Type */
+
+.edit-form-row {
+    display: flex;
+
+    gap: 16px;
+}
+
+
+/* ================================
+   BUTTONS
+================================ */
+
+.edit-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    margin-top: 5px;
+}
+
+.cancel-edit-button,
+.save-edit-button {
+    padding: 13px 22px;
+
+    border-radius: 11px;
+
+    font-weight: 600;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.cancel-edit-button {
+    background: white;
+
+    border: 1px solid #ded5f3;
+
+    color: #666;
+}
+
+.cancel-edit-button:hover {
+    background: #faf8ff;
+}
+
+.save-edit-button {
+    border: none;
+
+    background: #7045e8;
+
+    color: white;
+
+    box-shadow:
+        0 7px 16px rgba(112, 69, 232, 0.20);
+}
+
+.save-edit-button:hover {
+    background: #6235df;
+
+    transform: translateY(-1px);
+}
+
+.save-edit-button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* ================================
+   ERROR
+================================ */
+
+.edit-error {
+    margin-bottom: 20px;
+
+    padding: 12px 15px;
+
+    border-radius: 10px;
+
+    background: #fff0f2;
+
+    color: #dc3d55;
+
+    font-size: 14px;
+}
+
+.edit-loading {
+    text-align: center;
+
+    margin-top: 100px;
+
+    color: #7045e8;
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 650px) {
+
+    .edit-page {
+        padding: 30px 18px;
+    }
+
+    .edit-resource-panel {
+        padding: 24px 20px;
+    }
+
+    .edit-form-row {
+        flex-direction: column;
+    }
+
+    .edit-actions {
+        flex-direction: column-reverse;
+    }
+
+    .cancel-edit-button,
+    .save-edit-button {
+        width: 100%;
+    }
+}

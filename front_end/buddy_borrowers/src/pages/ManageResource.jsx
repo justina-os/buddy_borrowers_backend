@@ -62,7 +62,17 @@ function ManageResource() {
 
                 <div className="manage-actions">
 
-                    <button className="edit-button">
+                    <button
+                    className="edit-resource-button"
+                    onClick={() =>
+                    navigate(
+                    `/my-resources/${resource.resource_id}/edit`,
+                    {
+                        state: { resource }
+                     }
+                     )
+                             }
+                    >
                         ✏️ Edit Resource
                     </button>
 
