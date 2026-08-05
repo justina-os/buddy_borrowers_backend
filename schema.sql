@@ -62,7 +62,7 @@
 -- delete from resources where owner_id=1;
 
 
--- SELECT * from users;
+SELECT * from users;
 
 
 -- create table messages(
@@ -84,5 +84,5 @@
 -- );
 
 
-alter TABLE pending_signup
-add CONSTRAINT unique_mail UNIQUE(mail_id)
+-- alter TABLE pending_signup
+-- add CONSTRAINT unique_mail UNIQUE(mail_id)
