@@ -644,6 +644,108 @@ button{
 
 
 /* RESOURCE CARDS */
+/* =========================
+   REQUEST / CHAT BUTTONS
+========================= */
+
+.card-actions{
+    display:flex;
+    gap:12px;
+    margin-top:20px;
+}
+
+.card-actions button{
+    flex:1;
+
+    height:46px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border:none;
+    border-radius:10px;
+
+    font-size:14px;
+    font-weight:600;
+
+    cursor:pointer;
+    transition:all .2s ease;
+}
+
+
+/* ACCEPT */
+
+.accept-button{
+    background:#6d44d4;
+    color:#fff;
+}
+
+.accept-button:hover{
+    background:#5b36bf;
+}
+
+
+/* REJECT */
+
+.reject-button{
+    background:#ffe8e8;
+    color:#d63c3c;
+}
+
+.reject-button:hover{
+    background:#ffd9d9;
+}
+
+
+/* CHAT */
+
+.chat-button{
+    background:#7b5bf0;
+    color:#fff;
+}
+
+.chat-button:hover{
+    background:#6948e8;
+}
+
+
+/* RETURN */
+
+.return-button{
+    background:#fff;
+    color:#6d44d4;
+
+    border:1px solid #d7ccff;
+}
+
+.return-button:hover{
+    background:#f5f0ff;
+}
+
+
+/* ACTIVE CHAT PAGE */
+
+.chat-actions{
+    display:flex;
+    gap:12px;
+    margin-top:20px;
+}
+
+.chat-actions button{
+    flex:1;
+
+    height:46px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border-radius:10px;
+
+    font-size:14px;
+    font-weight:600;
+}
 
 .resource-grid{
     display:grid;
@@ -1047,31 +1149,30 @@ button{
     font-weight: 600;
 }
 
-.chat-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+.chat-button{
+    flex:1;
 
-    padding: 10px 18px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 
-    border: none;
-    border-radius: 10px;
+    height:44px;
 
-    background: #6d44d4;
-    color: white;
+    border:none;
+    border-radius:10px;
 
-    font-size: 14px;
-    font-weight: 600;
+    background:#6d44d4;
+    color:white;
 
-    cursor: pointer;
+    font-size:14px;
+    font-weight:600;
 
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+    transition:.2s;
 }
 
+.chat-button:hover{
+    background:#5b36bf;
+}
 .chat-button:hover {
     background: #5d36c4;
     transform: translateY(-2px);
@@ -1088,6 +1189,22 @@ button{
     margin-top:16px;
 }
 
+.card-actions{
+    display:flex;
+    gap:12px;
+    margin-top:18px;
+}
+
+.card-actions button{
+    flex:1;
+    height:44px;
+
+    border:none;
+    border-radius:10px;
+
+    font-weight:600;
+    font-size:14px;
+}
 .chat-button,
 .return-button{
     flex:1;
@@ -1151,9 +1268,7 @@ button{
     gap:8px;
 }
 
-.chat-button{
-    margin-top:12px;
-}
+
 
 .resource-icon{
     width:100%;
@@ -1227,4 +1342,39 @@ button{
 .edit-resource-button:hover{
     background:#5b36bf;
     transform:translateY(-2px);
+}
+.resource-image{
+    height:190px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:linear-gradient(
+        135deg,
+        #f5f2ff,
+        #faf8ff
+    );
+
+    border-bottom:1px solid #eee;
+}
+
+.resource-icon{
+    color:#7a5be8;
+}
+
+.reject-button{
+    background:#F3EEFF;
+    color:#6D44D4;
+
+    border:1px solid #D8CBFF;
+}
+
+.reject-button:hover{
+    background:#E9E0FF;
+}
+
+.rejected{
+    background:#FCECEC;
+    color:#C62828;
 }

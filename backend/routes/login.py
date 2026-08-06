@@ -43,6 +43,8 @@ def create_token(data:dict):
 def login(details:Login,con=Depends(get_connection)):
     cur=con.cursor()
 
+    
+
 
     if not details.email.endswith("@kalvium.community"):
         raise HTTPException(
@@ -80,8 +82,10 @@ def signup(mail_id:str,code:str,con=Depends(get_connection)):
         temp=cur.fetchone()
         if not temp:
             raise HTTPException(status_code=404,detail="Pending signip not found")
+
+        print(temp["expires_at"])
         
-        if temp["expires_at"]<=datetime.now():
+        if temp["expires_at"]<=datetime.utcnow():
             raise HTTPException(status_code=400,detail="otp expired")
         if temp["code"]==code:
             cur.execute("insert into users (user_name,email,password) values(%s,%s,%s)",(temp["user_name"],temp["mail_id"],temp["password"]))
@@ -167,6 +171,8 @@ def verify_email(details:Signup,con=Depends(get_connection)):
         password=hash_password(details.password)
         
         num=str(random.randint(100000,999999))
+
+        cur.execute("delete from pending_signup where mail_id=%s",(details.email,))
         
         cur.execute("insert into pending_signup (mail_id,user_name,password,code) values(%s,%s,%s,%s)",(details.email,details.user_name,password,num))
         con.commit()

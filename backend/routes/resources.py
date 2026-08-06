@@ -59,7 +59,7 @@ def get_my_resources(user_id=Depends(give_access),con=Depends(get_connection)):
         
         cur.execute("select * from resources where owner_id=%s",(user_id,))
         temp=cur.fetchall()
-        print("MY RESOURCES:", temp)
+        
 
         return temp
 
@@ -237,6 +237,7 @@ def reject_request(
         cur.execute(
             """
             select req.request_id
+        
             from requests req
             join resources r
                 on req.resource_id = r.resource_id
@@ -264,6 +265,8 @@ def reject_request(
             ("rejected", request_id)
         )
 
+
+       
         con.commit()
 
         return {"message": "Request rejected"}

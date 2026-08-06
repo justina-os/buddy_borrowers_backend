@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 function ManageResource() {
 
@@ -129,7 +129,14 @@ function ManageResource() {
 
                 <div className="manage-actions">
 
-    <button className="edit-resource-button">
+    <button
+    className="edit-resource-button"
+    onClick={() =>
+        navigate(`/my-resources/${resource.resource_id}/edit`, {
+            state: { resource }
+        })
+    }
+>
     <Pencil size={18} />
     Edit Resource
 </button>
@@ -148,7 +155,7 @@ function ManageResource() {
     )}
 </div>
 
-<button className="delete-button">
+<button className="delete-button" onClick={handleDelete}>
     <Trash2 size={18} />
     Delete Resource
 </button>

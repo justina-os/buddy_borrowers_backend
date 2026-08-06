@@ -22,7 +22,7 @@ import {
     Plus,Lightbulb
 } from "lucide-react";
 
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 function Home() {
 
@@ -190,6 +190,7 @@ function Home() {
 
 
             setResources(response.data);
+            setViewMode("none");
 
         }
 
@@ -1225,8 +1226,8 @@ const handleRejectRequest = async (resourceId, requestId) => {
                 >
 
                     <div className="resource-image">
-                        <span>📥</span>
-                    </div>
+    <Inbox size={55} strokeWidth={1} className="resource-icon" />
+</div>
 
                     <div className="resource-details">
 
@@ -1239,10 +1240,9 @@ const handleRejectRequest = async (resourceId, requestId) => {
     </p>
 
 
-    <div className="request-actions">
+   <div className="card-actions">
 
-    {request.status !== "accepted" &&
-     request.status !== "rejected" && (
+    {request.request_status === "requested" && (
         <>
             <button
                 className="accept-button"
@@ -1260,7 +1260,6 @@ const handleRejectRequest = async (resourceId, requestId) => {
                 className="reject-button"
                 onClick={() =>
                     handleRejectRequest(
-                        request.resource_id,
                         request.request_id
                     )
                 }
@@ -1270,17 +1269,19 @@ const handleRejectRequest = async (resourceId, requestId) => {
         </>
     )}
 
-    <button
-        className="chat-button"
-        onClick={() =>
-            navigate(`/chat/${request.request_id}`)
-        }
-    >
-        Chat
-    </button>
+    {(request.request_status === "requested" ||
+      request.request_status === "accepted") && (
+        <button
+            className="chat-button"
+            onClick={() =>
+                navigate(`/chat/${request.request_id}`)
+            }
+        >
+            Chat
+        </button>
+    )}
 
 </div>
-
 </div>
 
                 </article>
@@ -1337,14 +1338,20 @@ const handleRejectRequest = async (resourceId, requestId) => {
                                     {request.status}
                                 </p>
 
-                                <button
-                                         className="chat-button"
-                                        onClick={() =>
-                                        navigate(`/chat/${request.request_id}`)
-                                    }   
-                                >
-                                                 <MessageCircle size={17} /> Chat
-                                </button>
+                                {request.status !== "rejected" &&
+ request.status !== "returned" && (
+
+    <button
+        className="chat-button"
+        onClick={() =>
+            navigate(`/chat/${request.request_id}`)
+        }
+    >
+        <MessageCircle size={17}/>
+        Chat
+    </button>
+
+)}
 
                             </div>
 

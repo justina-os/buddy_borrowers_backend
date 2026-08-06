@@ -70,19 +70,21 @@ def show_requests(user_id=Depends(give_access),
 
         # return resources
 
-        cur.execute('''
-            select r.*,req.request_id
-            from resources r 
-            join requests req
-            on r.resource_id=req.resource_id
-            where req.status =%s and r.owner_id=%s
-
-
-
-        ''',("requested",user_id))
-
-        resources = cur.fetchall()
-        return resources
+       cur.execute('''
+        select
+        r.*,
+        req.request_id,
+        req.status as request_status
+        from resources r
+        join requests req
+        on r.resource_id = req.resource_id
+        where req.status=%s
+        and r.owner_id=%s
+        ''',
+        ("requested", user_id)
+            )
+       resources = cur.fetchall()
+       return resources
     finally:
         cur.close()
 
