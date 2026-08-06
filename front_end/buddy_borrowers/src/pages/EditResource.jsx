@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/EditResource.css";
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = "http://127.0.0.1:8000"
 
 function EditResource() {
     const navigate = useNavigate();

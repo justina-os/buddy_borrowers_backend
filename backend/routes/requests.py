@@ -34,7 +34,13 @@ def request_item(info:RequestInfo,resource_id:int,
             raise HTTPException(status_code=409 ,detail="Resource not available")
         
 
-        cur.execute("select * from requests where resource_id=%s and requester_id=%s",(resource_id,user_id))
+        cur.execute("""
+                    SELECT 1
+                    FROM requests
+                    WHERE resource_id = %s
+                    AND requester_id = %s
+                    AND status IN ('requested', 'accepted')
+                    """, (resource_id, user_id))
         row=cur.fetchone()
         if row:
             raise HTTPException(status_code=409,detail="Already requested ")
