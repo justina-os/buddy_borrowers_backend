@@ -12,18 +12,27 @@ app_password = os.getenv("MAIL_APP_PASSWORD")
 
 
 
+
 def send_email(to, otp):
-    message = EmailMessage()
+    # message = EmailMessage()
 
-    message["From"] = sender_email
-    message["To"] = to
-    message["Subject"] = "Buddy Borrowers verification"
-    message.set_content(str(otp))
+    # message["From"] = sender_email
+    # message["To"] = to
+    # message["Subject"] = "Buddy Borrowers verification"
+    # message.set_content(str(otp))
 
-    server = smtplib.SMTP("smtp.gmail.com", 587)
-    server.starttls()
-    server.login(sender_email, app_password)
+    # print(sender_email)
+    # print(app_password is not None)
 
-    server.send_message(message)
-    server.quit()
-    
+    # server = smtplib.SMTP("smtp.gmail.com", 587)
+    # server.starttls()
+    # server.login(sender_email, app_password)
+
+    # server.send_message(message)
+    # server.quit()
+    # send_email(details.email, num)
+    # 
+    return {
+    "message": "OTP generated",
+    "otp": otp
+}
