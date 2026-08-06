@@ -1,48 +1,216 @@
-# Buddy Borrowers
+# Buddy Borrowers v1.0
 
-Buddy Borrowers is a campus resource-sharing platform that enables students to lend physical items and offer skills to other students without relying on informal messaging groups.
+Buddy Borrowers is a campus resource-sharing platform that allows students to lend and borrow everyday items or offer skills within their college community.
 
-The platform manages the complete borrowing lifecycle, from creating a listing to requesting, accepting, chatting, and returning the resource.
+The goal of the project is to encourage resource sharing while providing a secure workflow for requesting, accepting, rejecting, and returning resources.
+
+---
 
 ## Features
 
 ### Authentication
-- Secure registration using Email OTP verification
+
+- Email verification during signup
 - JWT-based authentication
+- Secure login
 - Protected API endpoints
 
 ### Resource Management
-- Create, edit and delete resources
-- List physical objects or skills
-- View personal listings
+
+- Add new resources
+- Edit existing resources
+- Delete resources
+- Search available resources
+- View your own listings
 
 ### Borrowing Workflow
-1. Student browses available resources.
-2. Sends a request with an offer.
-3. Owner accepts or rejects the request.
-4. Once accepted, a private chat becomes available.
-5. After the resource is returned, the owner marks it as returned.
-6. The resource becomes available again.
 
-### Tech Stack
+- Request a resource
+- Accept or reject requests
+- Return borrowed resources
+- Track request status
 
-Frontend
-- React
-- Vite
-- Axios
-- Lucide React
+### Chat
 
-Backend
+- Request-based chat between lender and borrower
+- Conversations linked to each borrowing request
+
+---
+
+## Tech Stack
+
+### Backend
+
 - FastAPI
 - PostgreSQL
+- Psycopg
 - JWT Authentication
-- Email OTP
-- REST APIs
+- Pydantic
 
-Database
-- PostgreSQL (Neon)
+### Frontend
 
-Deployment
-- Frontend: Vercel
+- React
+- Axios
+- React Router
+- CSS
+- Lucide React Icons
+
+### Deployment
+
 - Backend: Render
-- Database: Neon
+- Database: Neon PostgreSQL
+
+---
+
+## Database Design
+
+The application uses a relational database consisting of:
+
+- Users
+- Resources
+- Requests
+- Messages
+- Pending Signup Verification
+
+Relationships are maintained using foreign keys to ensure data consistency.
+
+---
+
+## Request Workflow
+
+```text
+                    User
+                     │
+        ┌────────────┴────────────┐
+        │                         │
+        ▼                         ▼
+ Create Resource           Request Resource
+                                  │
+                                  ▼
+                         Chat Opens Immediately
+                     (Negotiation / Discussion)
+                                  │
+                                  ▼
+                             Lender Decision
+                           ┌────────┴────────┐
+                           │                 │
+                           ▼                 ▼
+                        Accept           Reject
+                           │                 │
+                           ▼                 ▼
+                  Resource Rented      Chat Blocked
+                           │
+                           ▼
+                    Resource Returned
+                           │
+                           ▼
+                  Resource Available Again
+```
+```
+
+---
+
+## Project Structure
+
+```
+backend/
+    auth.py
+    db.py
+    main.py
+    routes/
+
+frontend/
+    src/
+    components/
+    pages/
+```
+
+---
+
+## Running Locally
+
+### Clone
+
+```bash
+git clone https://github.com/justina-os/buddy_borrowers_backend.git
+```
+
+### Backend
+
+```bash
+cd backend
+
+python -m venv venv
+
+pip install -r requirements.txt
+
+uvicorn main:app --reload
+```
+
+### Frontend
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+---
+
+## Environment Variables
+
+Backend
+
+```env
+DATABASE_URL=
+JWT_SECRET=
+EMAIL_ADDRESS=
+EMAIL_PASSWORD=
+```
+
+Frontend
+
+```env
+VITE_API_URL=
+```
+
+---
+
+## Future Improvements (V2)
+
+- Real-time chat using WebSockets
+- Notifications
+- Image uploads for resources
+- User profiles
+- Ratings and reviews
+- Better frontend state management
+- Responsive mobile interface
+
+---
+
+## What I Learned
+
+Building Buddy Borrowers helped me gain practical experience with:
+
+- Designing REST APIs using FastAPI
+- JWT authentication
+- PostgreSQL database design
+- React and backend integration
+- Managing application state
+- Deployment using Render and Neon
+- Building a complete full-stack application from scratch
+
+---
+
+## Development Notes
+
+The backend architecture, database design, API implementation, business logic, and deployment were designed and implemented by me.
+
+The React frontend was developed with AI-assisted code generation and guidance. I integrated the frontend with the backend, adapted the generated code to match the API, and debugged the application throughout development.
+## Author
+
+Justina
+
+Second-year AIML Student
