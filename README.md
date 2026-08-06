@@ -106,7 +106,7 @@ Relationships are maintained using foreign keys to ensure data consistency.
                            ▼
                   Resource Available Again
 ```
-```
+
 
 ---
 
