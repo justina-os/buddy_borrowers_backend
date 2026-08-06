@@ -2,6 +2,7 @@ from fastapi import APIRouter, WebSocket,Depends
 from backend.db import get_connection
 from backend.websocket_manger import manager
 from backend.routes.login import verify_token
+from backend.routes.login import verify_token, give_access
 
 chat= APIRouter()
 
@@ -90,25 +91,37 @@ async def chatting(request_id:int,websocket:WebSocket,token:str,conn=Depends(get
 
 
 
+@chat.get("/chats")
+def get_chats(
+    user_id=Depends(give_access),
+    conn=Depends(get_connection)
+):
+    cur = conn.cursor()
 
+    try:
+        cur.execute(
+            '''
+            SELECT
+                r.resource_id,
+                r.resource_name,
+                r.resource_description,
+                r.price,
+                r.category,
+                req.request_id,
+                req.status AS request_status
+            FROM resources r
+            JOIN requests req
+                ON r.resource_id = req.resource_id
+            WHERE req.status = %s
+            AND (
+                r.owner_id = %s
+                
+            )
+            ''',
+            ("accepted", user_id)
+        )
 
+        return cur.fetchall()
 
-
-
-
-
-
-
-
-
-
-
-
-# while True:
-#     message = await websocket.receive_text()
-
-#     # 1. Save the message to the database
-
-#     # 2. Send the message to the other user(s)
-
-#     # 3. Wait for the next message
+    finally:
+        cur.close()

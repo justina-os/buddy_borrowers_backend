@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Home.css";
 
+
+
 import buddyHero from "../assets/buddy-hero.png";
 
 import {
@@ -17,7 +19,7 @@ import {
     Search,
     Bell,
     MessageCircle,
-    Plus
+    Plus,Lightbulb
 } from "lucide-react";
 
 const BASE_URL = "http://127.0.0.1:8000";
@@ -28,12 +30,14 @@ function Home() {
     const token = localStorage.getItem("token");
     const [resources,setResources] = useState([]);
     const [myResourceCount, setMyResourceCount] = useState(0);
+    const [myRequestCount, setMyRequestCount] = useState(0);
     const [search,setSearch] = useState("");
     const [loading,setLoading] = useState(false);
     const [error,setError] = useState("");
     const [showAddResource,setShowAddResource] = useState(false);
     const [viewMode,setViewMode] = useState("none");
     const [incomingRequests, setIncomingRequests] = useState([]);
+    const [chats, setChats] = useState([]);
     // Add Resource form
 
     const [resourceName,setResourceName] = useState("");
@@ -91,6 +95,32 @@ function Home() {
     fetchMyResourceCount();
 
                     }, []);
+
+
+    useEffect(() => {
+
+    const fetchMyRequestCount = async () => {
+
+        try {
+
+            const response = await axios.get(
+                `${BASE_URL}/requests/my_requests`,
+                authConfig
+            );
+
+            setMyRequestCount(response.data.length);
+
+        } catch (err) {
+
+            console.error("Could not load request count:", err);
+
+        }
+
+    };
+
+    fetchMyRequestCount();
+
+}, []);
 
     useEffect(() => {
 
@@ -240,6 +270,65 @@ function Home() {
         }
 
     };
+    const handleChats = async () => {
+
+    try {
+        setLoading(true);
+        setError("");
+
+        const response = await axios.get(
+            `${BASE_URL}/chats`,
+            authConfig
+        );
+
+        console.log("CHATS:", response.data);
+
+        setChats(response.data);
+        setViewMode("chats");
+
+    } catch (err) {
+        console.error("CHAT LIST ERROR:", err);
+
+        setError(
+            err.response?.data?.detail ||
+            "Could not load chats."
+        );
+
+    } finally {
+        setLoading(false);
+    }
+};
+    const handleReturnResource = async (resourceId, requestId) => {
+
+    try {
+        setError("");
+
+        await axios.patch(
+            `${BASE_URL}/resource/${resourceId}/${requestId}/return`,
+            {},
+            authConfig
+        );
+
+        // Remove it from active chats
+        setChats((previousChats) =>
+            previousChats.filter(
+                (chat) => chat.request_id !== requestId
+            )
+        );
+
+    } catch (err) {
+
+        console.error(
+            "RETURN RESOURCE ERROR:",
+            err.response?.data
+        );
+
+        setError(
+            err.response?.data?.detail ||
+            "Could not return resource."
+        );
+    }
+};
 
     const handleMyRequests = async () => {
 
@@ -334,13 +423,13 @@ function Home() {
         );
 
     } catch (err) {
+    console.error("ACCEPT REQUEST ERROR:", err.response?.data);
 
-        console.error("ACCEPT REQUEST ERROR:", err);
-
-        setError("Could not accept request.");
-
-    }
-
+    setError(
+        err.response?.data?.detail ||
+        "Could not accept request."
+    );
+}
 };
 
 
@@ -545,7 +634,7 @@ const handleRejectRequest = async (resourceId, requestId) => {
         <span>View Requests</span>
     </button>
 
-    <button className="nav-link">
+    {/* <button className="nav-link">
         <Heart size={18} />
         <span>Favourites</span>
     </button>
@@ -553,6 +642,14 @@ const handleRejectRequest = async (resourceId, requestId) => {
     <button className="nav-link">
         <User size={18} />
         <span>Profile</span>
+    </button> */}
+
+    <button
+        className="nav-link"
+        onClick={handleChats}
+    >
+        <MessageCircle size={18} />
+        <span>Accepted requests</span>
     </button>
 
     {/* <button className="nav-link">
@@ -642,7 +739,7 @@ const handleRejectRequest = async (resourceId, requestId) => {
         </button>
 
         {/* Messages */}
-        <button className="icon-button">
+        <button className="icon-button" onClick={handleChats}>
             <MessageCircle size={19} />
         </button>
 
@@ -722,7 +819,7 @@ const handleRejectRequest = async (resourceId, requestId) => {
             <div className="stat-card">
                 <span>Requests</span>
 
-                <strong>--</strong>
+                <strong>{myRequestCount}</strong>
 
                 <small>
                     Yet to connect
@@ -1039,7 +1136,82 @@ const handleRejectRequest = async (resourceId, requestId) => {
             MY REQUESTS
         ========================== */}
 
-       {viewMode === "incoming-requests" ? (
+       {viewMode === "chats" ? (
+
+    <div className="resource-grid">
+
+        {chats.length > 0 ? (
+
+            chats.map((chat) => (
+
+                <article
+                    className="resource-card"
+                    key={chat.request_id}
+                >
+
+                    <div className="resource-image">
+                        <span><MessageCircle size={17}/></span>
+                    </div>
+
+                    <div className="resource-details">
+
+                        <h3>
+                            {chat.resource_name}
+                        </h3>
+
+                        <p className="description">
+                            {chat.resource_description || "No description"}
+                        </p>
+
+                        <p>
+                            <strong>Status: </strong>
+                            {chat.request_status}
+                        </p>
+
+                        <div className="chat-actions">
+
+    <button
+        className="chat-button"
+        onClick={() =>
+            navigate(`/chat/${chat.request_id}`)
+        }
+    >
+        <MessageCircle size={17} />
+        Open Chat
+    </button>
+
+    <button
+        className="return-button"
+        onClick={() =>
+            handleReturnResource(
+                chat.resource_id,
+                chat.request_id
+            )
+        }
+    >
+        ↩ Returned
+    </button>
+
+</div>
+
+                    </div>
+
+                </article>
+
+            ))
+
+        ) : (
+
+            <div className="no-resources">
+                <h3>No chats yet</h3>
+                <p>Accepted requests will appear here.</p>
+            </div>
+
+        )}
+
+    </div>
+
+) : viewMode === "incoming-requests" ? (
 
     <div className="resource-grid">
 
@@ -1141,7 +1313,7 @@ const handleRejectRequest = async (resourceId, requestId) => {
 
                             <div className="resource-image">
 
-                                <span>📩</span>
+                                <span><Inbox size={55} strokeWidth={1}/></span>
 
                             </div>
 
@@ -1171,7 +1343,7 @@ const handleRejectRequest = async (resourceId, requestId) => {
                                         navigate(`/chat/${request.request_id}`)
                                     }   
                                 >
-                                                 💬 Chat
+                                                 <MessageCircle size={17} /> Chat
                                 </button>
 
                             </div>
@@ -1232,24 +1404,23 @@ const handleRejectRequest = async (resourceId, requestId) => {
 
                         }}
                     >
+<div className="resource-image">
 
-                        <div className="resource-image">
+    {resource.category === "Skill" ? (
+        <Lightbulb size={52} strokeWidth={1} />
+    ) : (
+        <Package size={52} strokeWidth={1} />
+    )}
 
-                            <span>
-                                {resource.category === "Skill"
-                                    ? "🧠"
-                                    : "📦"}
-                            </span>
+    <button className="heart">
+        ♡
+    </button>
 
-                            <button className="heart">
-                                ♡
-                            </button>
+    <span className="category-badge">
+        {resource.category}
+    </span>
 
-                            <span className="category-badge">
-                                {resource.category}
-                            </span>
-
-                        </div>
+</div>
 
                         <div className="resource-details">
 

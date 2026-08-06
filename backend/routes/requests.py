@@ -21,12 +21,25 @@ def request_item(info:RequestInfo,resource_id:int,
     cur=con.cursor()
 
     try:
+        cur.execute("select * from resources where resource_id=%s",(resource_id,))
+        resource=cur.fetchone()
+
+        if not resource:
+            raise HTTPException(status_code=404,detail="Resouce not found")
+
+        if resource["owner_id"]==user_id:
+            raise HTTPException(status_code=400,detail="You can't request ur own request")
+
+        if resource["status"]!="available":
+            raise HTTPException(status_code=409 ,detail="Resource not available")
         
 
         cur.execute("select * from requests where resource_id=%s and requester_id=%s",(resource_id,user_id))
         row=cur.fetchone()
         if row:
             raise HTTPException(status_code=409,detail="Already requested ")
+
+        
         cur.execute(''' insert into requests 
         (offers,requester_id,resource_id,status) values(%s,%s,%s,%s)''',(info.offers,user_id,resource_id,"requested"))
         con.commit()
@@ -62,7 +75,7 @@ def show_requests(user_id=Depends(give_access),
             from resources r 
             join requests req
             on r.resource_id=req.resource_id
-            where req.status=%s and r.owner_id=%s
+            where req.status =%s and r.owner_id=%s
 
 
 
@@ -74,17 +87,19 @@ def show_requests(user_id=Depends(give_access),
         cur.close()
 
 @request.delete("/requests/{request_id}")
-def cancel_request(request_id:int,con=Depends(get_connection)):#getting request_id from front_end
+def cancel_request(request_id:int,con=Depends(get_connection),user_id=Depends(give_access)):#getting request_id from front_end
     cur=con.cursor()
 
     try:
         
+        
 
-        cur.execute("delete  from requests where request_id=%s",(request_id,))
+        cur.execute("delete  from requests where request_id=%s and requester_id=%s and status=%s",(request_id,user_id,"requested"))
 
         if cur.rowcount==0:
             raise HTTPException(status_code=404, detail="Request doesn't exist")
         con.commit()
+        return {"message": "Request cancelled"}
     finally:
         cur.close()
 
@@ -111,6 +126,6 @@ def get_my_request(user_id=Depends(give_access),
         requests=cur.fetchall()
 
         return requests
-        pass
+        
     finally:
         cur.close()

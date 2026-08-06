@@ -92,6 +92,27 @@ def accept_request(resource_id:int,request_id:int,user_id=Depends(give_access),c
     cur=con.cursor()
 
     try:
+
+        cur.execute(
+            """
+            select owner_id, status
+            from resources
+            where resource_id=%s
+            """,
+            (resource_id,)
+            )
+
+        resource = cur.fetchone()
+
+        if not resource:
+            raise HTTPException(404, "Resource not found")
+
+        if resource["owner_id"] != user_id:
+            raise HTTPException(403, "You cannot accept requests for this resource")
+
+        # if resource["status"] != "available":
+        #     raise HTTPException(409, "Resource is not available")
+        
         cur.execute('''update requests
                     set status=%s
                      where request_id=%s and resource_id=%s
@@ -107,12 +128,18 @@ def accept_request(resource_id:int,request_id:int,user_id=Depends(give_access),c
                     where owner_id=%s and resource_id=%s
           ''',("rented",user_id,resource_id))
 
+        cur.execute('''
+        update requests
+        set status =%s
+        where resource_id=%s and request_id!=%s and status=%s
+        ''',("rejected",resource_id,request_id,"requested"))
 
-        if cur.rowcount == 0:
-            raise HTTPException(
-                    status_code=404,
-                    detail="Resource not found."
-                )
+
+        # if cur.rowcount == 0:
+        #     raise HTTPException(
+        #             status_code=404,
+        #             detail="Resource not found."
+        #         )
 
         
         
@@ -183,8 +210,8 @@ def returned_resource(resource_id:int,request_id:int,user_id=Depends(give_access
                 
             cur.execute('''update requests
                         set status=%s
-                         where request_id=%s and resource_id=%s
-                        ''',("returned",request_id,resource_id))
+                         where request_id=%s and resource_id=%s and status=%s
+                        ''',("returned",request_id,resource_id,"accepted"))
             
             if cur.rowcount == 0:
                 raise HTTPException(
@@ -196,3 +223,50 @@ def returned_resource(resource_id:int,request_id:int,user_id=Depends(give_access
             con.commit()
         finally:
             cur.close()
+
+
+@resource.patch("/requests/{request_id}/reject")
+def reject_request(
+    request_id: int,
+    user_id=Depends(give_access),
+    con=Depends(get_connection)
+):
+    cur = con.cursor()
+
+    try:
+        cur.execute(
+            """
+            select req.request_id
+            from requests req
+            join resources r
+                on req.resource_id = r.resource_id
+            where req.request_id=%s
+            and r.owner_id=%s
+            and req.status=%s
+            """,
+            (request_id, user_id, "requested")
+        )
+
+        req = cur.fetchone()
+
+        if not req:
+            raise HTTPException(
+                status_code=404,
+                detail="Pending request not found"
+            )
+
+        cur.execute(
+            """
+            update requests
+            set status=%s
+            where request_id=%s
+            """,
+            ("rejected", request_id)
+        )
+
+        con.commit()
+
+        return {"message": "Request rejected"}
+
+    finally:
+        cur.close()

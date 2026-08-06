@@ -79,12 +79,12 @@ function ResourceDetails() {
             <div className="resource-details-card">
 
                 <div className="details-image">
-
-                    <span>
-                        {resource.category === "Skill" ? "🧠" : "📦"}
-                    </span>
-
-                </div>
+    {resource.category === "Skill" ? (
+        <Lightbulb size={72} strokeWidth={1.5} />
+    ) : (
+        <Package size={72} strokeWidth={1.5} />
+    )}
+</div>
 
 
                 <span className="details-category">

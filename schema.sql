@@ -62,7 +62,7 @@
 -- delete from resources where owner_id=1;
 
 
-SELECT * from users;
+SELECT * from requests;
 
 
 -- create table messages(
