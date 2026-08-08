@@ -2,7 +2,42 @@
 
 Buddy Borrowers is a campus resource-sharing platform that allows students to lend and borrow everyday items or offer skills within their college community.
 
-The goal of the project is to encourage resource sharing while providing a secure workflow for requesting, accepting, rejecting, and returning resources.
+The goal of the project is to encourage resource sharing while providing a secure workflow for requesting, negotiating, accepting, rejecting, and returning resources.
+
+---
+
+## Demo
+
+![Buddy Borrowers Demo](./ScreenshotRefs/Demo.gif)
+
+---
+
+## Screenshots
+
+### Dashboard
+
+![Buddy Borrowers Dashboard](./ScreenshotRefs/Dashboard.png)
+
+### Resource Listings
+
+![Resource Listings](./ScreenshotRefs/RequestedResources.png)
+
+### Request & Return Workflow
+
+![Accepted Request](./ScreenshotRefs/AcceptedRequests.png)
+
+---
+
+## Key Engineering Highlights
+
+- Designed a relational PostgreSQL database for users, resources, requests, messages, and signup verification.
+- Implemented JWT-based authentication and protected API endpoints.
+- Implemented authorization rules for resource ownership and borrowing actions.
+- Built a complete borrowing workflow from resource request and negotiation to acceptance, return, and resource availability.
+- Implemented request-based chat between lenders and borrowers.
+- Integrated the React frontend with the FastAPI backend.
+- Deployed the backend using Render and PostgreSQL using Neon.
+
 
 ---
 
